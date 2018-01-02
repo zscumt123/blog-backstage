@@ -15,8 +15,9 @@ export async function getData(url, params = {}, method = 'GET') {
     let realUrl = baseUrl + url;
     let options = {
         method: method.toUpperCase(),
+        'credentials': 'same-origin',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
     };
     if (method.toUpperCase() === 'GET') {
