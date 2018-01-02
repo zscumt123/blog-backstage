@@ -3,11 +3,11 @@ import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import Login from '../pages/login/Login';
 import Main from '../pages/main/Main';
-const isLogin = true;
+const isLogin = false;
 
 const Routes = (props) => (
     <BrowserRouter>
-        <div>
+        <div className="root-container">
             <Route path="/" exact render={() => {
                 return <Redirect to={ isLogin ? '/main' : '/login' }/>
             }}/>
