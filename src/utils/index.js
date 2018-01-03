@@ -3,6 +3,8 @@
  * 
 */
 import { Modal } from 'antd';
+import Cookies from 'js-cookie';
+
 const warning = Modal.warning;
 const showWarnInfo = (msg) => {
     return warning({
@@ -10,7 +12,8 @@ const showWarnInfo = (msg) => {
         content: msg,
     });
 }
-const baseUrl = '/api/v1'
+const baseUrl = '/api/v1';
+
 export async function getData(url, params = {}, method = 'GET') {
     let realUrl = baseUrl + url;
     let options = {
@@ -51,4 +54,8 @@ export async function getData(url, params = {}, method = 'GET') {
         res = {code: 1, msg: '出错了'};
     }
     return res;
+}
+
+export const hasLogin = () => {
+    return !!Cookies.get('userName');
 }

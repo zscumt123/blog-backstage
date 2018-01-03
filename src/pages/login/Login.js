@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Button, Icon, Input, Checkbox } from 'antd';
+import { Redirect } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { getData } from '../../utils';
 import styles from './Login.less';
 import api from '../../api';
+import { hasLogin } from '../../utils';
 const FormItem = Form.Item;
 
 class Login extends Component {
@@ -27,7 +30,13 @@ class Login extends Component {
                 getData(api.userLogin, { username, password }, 'post').then(res => {
                     this.setState({
                         loading: false
-                    })
+                    });
+                    const { name } = res.data;
+                    console.log(name);
+                    Cookies.set('userName', name);
+                    const { history } = this.props;
+                    history.push('/main');
+
                 })
             }
             
@@ -36,6 +45,9 @@ class Login extends Component {
         
     }
     render() {
+        if(hasLogin()) {
+            return <Redirect to={'/main'} />
+        }
         const { getFieldDecorator  } = this.props.form;
         return (
             <div className={styles.container}>
