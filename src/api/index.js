@@ -4,7 +4,8 @@
 */
 
 const api = {
-    userLogin: '/login'
+    userLogin: '/login',
+    userList: '/userlist'
 }
 
 export default api;
