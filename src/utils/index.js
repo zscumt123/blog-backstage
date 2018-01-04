@@ -4,7 +4,9 @@
 */
 import { Modal } from 'antd';
 import Cookies from 'js-cookie';
+import createHistory from 'history/createBrowserHistory';
 
+const history = createHistory();
 const warning = Modal.warning;
 const showWarnInfo = (msg) => {
     return warning({
@@ -41,9 +43,16 @@ export async function getData(url, params = {}, method = 'GET') {
         response = await fetch(realUrl, options);
         if(response.ok && response.status === 200) {
             res = await response.json();
-            if(+res.code !== 0) {
+            const code = Number(res.code);
+            
+            if(code !== 0) {
                 const msg = res.msg || '系统错误';
-                showWarnInfo(msg);
+                if(code === 2) {
+                    Cookies.remove('userName');
+                    history.push('/login');
+                } else {
+                    showWarnInfo(msg);
+                }
             }
         } else {
             res = {code: -1, msg: '系统错误'};

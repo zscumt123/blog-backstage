@@ -48,17 +48,23 @@ export default class UserManage extends Component {
             loading: true,
         });
         getData(api.userList, obj).then((res) => {
-            const data = res.data ? res.data.data : {}
+            if(Number(res.code === 0)) {
+                console.log(res);
+                const data = res.data ? res.data.data : {}
+                this.setState({
+                    dataSource: data,
+                    pagination: {
+                        ...this.state.pagination,
+                        current: res.data.pageNum || 1,
+                        total: res.data.total || 0,
+                    }
+                })
+            }
             this.setState({
-                dataSource: data,
                 loading: false,
-                pagination: {
-                    ...this.state.pagination,
-                    current: res.data.pageNum || 1,
-                    total: res.data.total || 0,
-                }
             })
-        })
+            
+        });
     }
     handleChange = ({ current, pageSize }) => {
         this.getPageData({ pageNum: current, pageSize });

@@ -31,11 +31,14 @@ class Login extends Component {
                     this.setState({
                         loading: false
                     });
-                    const { name } = res.data;
-                    console.log(name);
-                    Cookies.set('userName', name);
-                    const { history } = this.props;
-                    history.push('/main');
+                    if(+res.code === 0) {
+                        const { name } = res.data;
+                        console.log(name);
+                        Cookies.set('userName', name);
+                        const { history } = this.props;
+                        history.push('/main');
+                    }
+                    
 
                 })
             }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cookies from 'js-cookie';
 import { Layout, Icon, Menu, Dropdown } from 'antd';
 import { MainRoutes } from '../../routes/Routes';
 import styles from './Main.less';
@@ -6,23 +7,32 @@ import styles from './Main.less';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
-const menu = (
-    <Menu>
-        <Menu.Item key="1">
-            <span><Icon type="setting" />设置</span>
-        </Menu.Item>
-        <Menu.Item key="2">
-            <span><Icon type="logout" />退出登录</span>
-        </Menu.Item>
-  </Menu>
-);
+
 
 export default class Main extends Component {
     constructor(props) {
         super(props);
+        const _this = this;
         this.state = {
             collapsed: false,
         };
+        this.menu = (
+            <Menu>
+                <Menu.Item key="1">
+                    <span><Icon type="setting" />设置</span>
+                </Menu.Item>
+                <Menu.Item key="2">
+                    <span onClick={_this.logout}><Icon type="logout" />退出登录</span>
+                </Menu.Item>
+          </Menu>
+        );
+    }
+    
+     
+    logout = () => {
+        Cookies.remove('userName');
+        this.props.history.push('/login');
+        console.log('123')
     }
     toggle = () => {
         this.setState({
@@ -71,7 +81,7 @@ export default class Main extends Component {
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle}
                         />
-                        <Dropdown overlay={menu}>
+                        <Dropdown overlay={this.menu}>
                             <div className={styles.userSet}>                       
                                 <Icon type="user"/>
                                 <span>hahahaaaaaaaa</span>
