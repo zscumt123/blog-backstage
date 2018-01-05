@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect, withRouter } from 'react-router-dom';
+import { Router, Route, Redirect, withRouter } from 'react-router';
 
+import history from '../utils/history';
 import Login from '../pages/login/Login';
 import Main from '../pages/main/Main';
 import AuthRoute from '../components/authRoute/AuthRoute';
@@ -10,13 +11,13 @@ import UserManage from '../pages/userManage/UserManage';
 import Articles from '../pages/articles/Articles';
 
 const Routes = (props) => (
-    <BrowserRouter>
+    <Router history={history}>
         <AuthRoute>
             <Route path="/" exact render={() => <Redirect to="/main" />} />
             <Route path="/login" component={Login} />
             <Route path="/main" component={Main} />
         </AuthRoute>
-    </BrowserRouter>
+    </Router>
 );
 export default Routes;
 

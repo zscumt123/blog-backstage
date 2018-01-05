@@ -33,8 +33,8 @@ class Login extends Component {
                     });
                     if(+res.code === 0) {
                         const { name } = res.data;
-                        console.log(name);
-                        Cookies.set('userName', name);
+                        const date = new Date(Date.now() + 30000);
+                        Cookies.set('userName', name, { expires: date });
                         const { history } = this.props;
                         history.push('/main');
                     }

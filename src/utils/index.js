@@ -4,15 +4,21 @@
 */
 import { Modal } from 'antd';
 import Cookies from 'js-cookie';
-import createHistory from 'history/createBrowserHistory';
+import history from './history';
 
-const history = createHistory();
 const warning = Modal.warning;
 const showWarnInfo = (msg) => {
-    return warning({
+    const modal = warning({
         title: '提示信息',
         content: msg,
     });
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            modal && modal.destroy();
+            resolve();
+        },1500);
+    })
+    
 }
 const baseUrl = '/api/v1';
 
@@ -44,12 +50,13 @@ export async function getData(url, params = {}, method = 'GET') {
         if(response.ok && response.status === 200) {
             res = await response.json();
             const code = Number(res.code);
-            
             if(code !== 0) {
                 const msg = res.msg || '系统错误';
                 if(code === 2) {
-                    Cookies.remove('userName');
-                    history.push('/login');
+                    showWarnInfo(msg).then(() => {
+                        Cookies.remove('userName');
+                        history.replace('/login');
+                    })
                 } else {
                     showWarnInfo(msg);
                 }
