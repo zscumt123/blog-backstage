@@ -11,7 +11,7 @@ const columns = [
     {
         title: '邮箱',
         dataIndex: 'email',
-        key: '_id'
+        key: 'email'
     },
     {
         title: '创建时间',
@@ -22,6 +22,25 @@ const columns = [
         title: '修改时间',
         dataIndex: 'update_Date',
         key: 'update_Date'
+    },
+    {
+        title: '上次登录时间',
+        dataIndex: 'last_time',
+        key: 'last_time'
+    },
+    {
+        title: '是否是管理员',
+        dataIndex: 'isAdmin',
+        key: 'isAdmin',
+        render(text) {
+            return text ? '是' : '否';
+        }
+    },
+    {
+        title: '操作',
+        render() {
+            return <span>DEL</span>;
+        }
     }
 ]
 
