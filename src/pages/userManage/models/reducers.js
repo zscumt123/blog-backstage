@@ -2,7 +2,7 @@
  * UserManage reducers
  * 
 */
-import { handleAction } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { usGetTableData, usSetTableLoading } from './actions';
 
 const defaultTable = {
@@ -10,7 +10,7 @@ const defaultTable = {
     loading: false,
 }
 
-const reducer = handleAction({
+const reducer = handleActions({
     [usGetTableData]: (state, action) => ({ ...state, data: action.payload.data }),
     [usSetTableLoading]: (state, action) => ({ ...state, loading: action.payload.option })
 }, defaultTable)

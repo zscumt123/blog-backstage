@@ -1,4 +1,4 @@
-import { put, call, fork, take, takeEvery } from 'redux-saga/effects';
+import { put, call, fork, take, all } from 'redux-saga/effects';
 import { US_GET_TABLE_DATA, usSetTableLoading, usSetTableData } from './actions';
 import { getData } from '../../../utils';
 import API from '../../../api';
@@ -13,7 +13,11 @@ function* getTableData (params) {
 function* watchGetTableData () {
     while(true) {
         const action = yield take(US_GET_TABLE_DATA);
-        yield call(getTableData, action.payload);
+        yield call(getTableData, action.payload.params);
     }
 }
-export default watchGetTableData;
+export default function* root() {
+    yield all([
+        fork(watchGetTableData)
+    ]);
+}

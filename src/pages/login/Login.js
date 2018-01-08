@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Button, Icon, Input, Checkbox } from 'antd';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { lgSetLoginInfo,lgSetLoginOption } from './models/actions';
 import { getData } from '../../utils';
 import styles from './Login.less';
 import api from '../../api';
@@ -10,38 +12,40 @@ const FormItem = Form.Item;
 
 class Login extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: false
+    componentWillMount() {
+        const { dispatch, password } = this.props;
+        const username = Cookies.get('userName');
+        if (username) {
+            dispatch(lgSetLoginInfo({ username, password, isRember: true }));
         }
     }
     
     handleSubmit = (e) => {
-        const { validateFields } = this.props.form;
+        const { dispatch, form: { validateFields } } = this.props;
         e.preventDefault();
         validateFields((err,values) => {
             if(!err) {
                 const { userName: username, password } = values;
-                console.log(username, password);
-                this.setState({
-                    loading: true
-                });
-                getData(api.userLogin, { username, password }, 'post').then(res => {
-                    this.setState({
-                        loading: false
-                    });
-                    if(+res.code === 0) {
-                        const { name } = res.data;
-                        // const date = new Date(Date.now() + 30000);
-                        // Cookies.set('userName', name, { expires: date });
-                        // Cookies.set('userName', name);
-                        const { history } = this.props;
-                        history.push('/main');
-                    }
+                console.log(username, password)
+                dispatch(lgSetLoginOption({username, password}));
+                // this.setState({
+                //     loading: true
+                // });
+                // getData(api.userLogin, { username, password }, 'post').then(res => {
+                //     this.setState({
+                //         loading: false
+                //     });
+                //     if(+res.code === 0) {
+                //         // const { name } = res.data;
+                //         // const date = new Date(Date.now() + 30000);
+                //         // Cookies.set('userName', name, { expires: date });
+                //         // Cookies.set('userName', name);
+                //         const { history } = this.props;
+                //         history.push('/main');
+                //     }
                     
 
-                })
+                // })
             }
             
 
@@ -49,10 +53,10 @@ class Login extends Component {
         
     }
     render() {
-        if(hasLogin()) {
-            return <Redirect to={'/main'} />
-        }
-        const { getFieldDecorator  } = this.props.form;
+        // if(hasLogin()) {
+        //     return <Redirect to={'/main'} />
+        // }
+        const { username, password, isRember, btnLoading, form: { getFieldDecorator } } = this.props;
         return (
             <div className={styles.container}>
                 <div className={styles.main}>
@@ -60,6 +64,7 @@ class Login extends Component {
                         <FormItem>
                             {getFieldDecorator('userName', {
                                 rules: [{ required: true, message: '用户名不能为空!' }],
+                                initialValue: username
                             })(
                                 <Input size={'large'} prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
                             )}
@@ -67,6 +72,7 @@ class Login extends Component {
                         <FormItem>
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: '密码不能为空' }],
+                                initialValue: password
                             })(
                                 <Input size={'large'} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
                             )}
@@ -74,14 +80,14 @@ class Login extends Component {
                         <FormItem>
                             {getFieldDecorator('remember', {
                                 valuePropName: 'checked',
-                                initialValue: false,
+                                initialValue: isRember,
                             })(
-                                <Checkbox>自动登录</Checkbox>
+                                <Checkbox>记住账号</Checkbox>
                             )}
                              <a className={styles.forgetPwd} href="">忘记密码</a>
                         </FormItem>
                         <FormItem>
-                            <Button loading={this.state.loading} size={'large'} type="primary" htmlType="submit" className={styles.loginBtn}>
+                            <Button loading={btnLoading} size={'large'} type="primary" htmlType="submit" className={styles.loginBtn}>
                                 登录
                             </Button>
                         </FormItem>
@@ -91,4 +97,10 @@ class Login extends Component {
         );
     }
 }
-export default Form.create()(Login);
+
+const mapStateToProps = (state) => ({
+    ...state.loginData.params,
+    btnLoading: state.loginData.loading
+});
+
+export default connect(mapStateToProps)(Form.create()(Login));
