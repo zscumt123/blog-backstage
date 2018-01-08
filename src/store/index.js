@@ -2,8 +2,9 @@ import createSagaMiddleware from 'redux-saga';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
 import { userManageData, userManageSaga } from '../pages/userManage';
+
 const rootReducer = combineReducers({
-    userManageSaga
+    userManageData
 })
 
 export default function configureStore() {
