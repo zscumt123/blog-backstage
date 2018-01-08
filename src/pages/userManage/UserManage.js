@@ -16,17 +16,20 @@ const columns = [
     {
         title: '创建时间',
         dataIndex: 'create_Date',
-        key: 'create_Date'
+        key: 'create_Date',
+        sorter: true,
     },
     {
         title: '修改时间',
         dataIndex: 'update_Date',
-        key: 'update_Date'
+        key: 'update_Date',
+        sorter: true,
     },
     {
         title: '上次登录时间',
         dataIndex: 'last_time',
-        key: 'last_time'
+        key: 'last_time',
+        sorter: true,
     },
     {
         title: '是否是管理员',
@@ -85,8 +88,16 @@ export default class UserManage extends Component {
             
         });
     }
-    handleChange = ({ current, pageSize }) => {
-        this.getPageData({ pageNum: current, pageSize });
+    handleChange = ({ current, pageSize },filters, { field, order }) => {
+        let params = {
+            pageNum: current,
+            pageSize
+        }
+        if(order) {
+            params.sort = order === 'descend' ? -1 : 1;
+            params.sortField = field;
+        }
+        this.getPageData(params);
     }
     render() {
         const { dataSource, loading, pagination } = this.state;
