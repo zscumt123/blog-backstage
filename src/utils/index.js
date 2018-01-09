@@ -24,24 +24,36 @@ const baseUrl = '/api/v1';
 
 export async function getData(url, params = {}, method = 'GET') {
     let realUrl = baseUrl + url;
+    const requestMethod = ['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) === -1 ? 
+        'GET' : method.toUpperCase();
     let options = {
-        method: method.toUpperCase(),
+        method: requestMethod,
         'credentials': 'same-origin',
         headers: {
             'Content-Type': 'application/json',
         }
     };
-    if (method.toUpperCase() === 'GET') {
+    switch(requestMethod) {
+        case 'POST':
+        case 'PUT':
+            try {
+                options['body'] = JSON.stringify(params);
+            } catch(e) {
+                throw Error(e);
+            }
+            console.log('1')
+            break;
+        case 'DELETE':
+            realUrl += `/${params['id'] || ''}`;
+            console.log('2')
+            break;
+        case 'GET':
+        default:
+        console.log('3')
         const keys = Object.keys(params).map(item => `${item}=${params[item]}`);
         let query = keys.join('&');
         if(query !== '') {
             realUrl += '?' + query
-        }
-    } else {
-        try {
-            options['body'] = JSON.stringify(params);
-        } catch(e) {
-            throw Error(e);
         }
     }
     let response,res;
@@ -66,6 +78,7 @@ export async function getData(url, params = {}, method = 'GET') {
             showWarnInfo('系统错误');
         }
     } catch(e) {
+        console.log(e);
         showWarnInfo('出错了~~~');
         res = {code: 1, msg: '出错了'};
     }

@@ -3,15 +3,19 @@
  * 
 */
 import { handleActions } from 'redux-actions';
-import { usGetTableData, usSetTableLoading } from './actions';
+import { usSetTableData, usSetTableLoading } from './actions';
 
 const defaultTable = {
-    data: [],
+    data: {
+        data: [],
+        pageNum: 1,
+        total: 0,
+    },
     loading: false,
 }
 
 const reducer = handleActions({
-    [usGetTableData]: (state, action) => ({ ...state, data: action.payload.data }),
+    [usSetTableData]: (state, action) => ({ ...state, data: action.payload.data }),
     [usSetTableLoading]: (state, action) => ({ ...state, loading: action.payload.option })
 }, defaultTable)
 

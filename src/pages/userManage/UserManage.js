@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Table } from 'antd';
+import { usGetTableData } from './models/actions';
+
 import { getData } from '../../utils';
 import api from '../../api';
 const columns = [
@@ -47,7 +50,7 @@ const columns = [
     }
 ]
 
-export default class UserManage extends Component {
+class UserManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -60,10 +63,18 @@ export default class UserManage extends Component {
                 total: 0
             }
         };
+        this.pagination = {
+            pageSize: 2,
+            showQuickJumper: true,
+        };
     }
     componentDidMount() {
-        const { pageSize } = this.state.pagination;
-        this.getPageData({ pageSize });
+    //     const { pageSize } = this.state.pagination;
+     
+    //    this.getPageData({ pageSize });
+       const { pageSize } = this.pagination;
+       const { dispatch } = this.props;
+       dispatch(usGetTableData({ pageSize }));
     }
     getPageData = (obj) => {
         this.setState({
@@ -89,30 +100,36 @@ export default class UserManage extends Component {
         });
     }
     handleChange = ({ current, pageSize },filters, { field, order }) => {
-        let params = {
-            pageNum: current,
-            pageSize
-        }
+        const { dispatch } = this.props;
+        let params = { pageNum: current, pageSize };
         if(order) {
             params.sort = order === 'descend' ? -1 : 1;
             params.sortField = field;
         }
-        this.getPageData(params);
+        // this.getPageData(params);
+        dispatch(usGetTableData({ pageSize }));
     }
     render() {
-        const { dataSource, loading, pagination } = this.state;
+        // const { dataSource, loading, pagination } = this.state;
+        const { data, pageNum, total, loading } = this.props;
+        console.log(this.props)
         return (
             <div>
                 <Table 
                     onChange={this.handleChange} 
-                    pagination={pagination} 
+                    pagination={{ ...this.pagination, current: pageNum, total }} 
                     bordered 
                     loading={loading} 
                     columns={columns} 
-                    dataSource={dataSource} 
+                    dataSource={data} 
                     rowKey={'_id'}
                 />
             </div>
         );
     }
 }
+const mapStateToProps = (state) => ({
+    ...state.userManageData.data,
+    loading: state.userManageData.loading
+});
+export default connect(mapStateToProps)(UserManage);

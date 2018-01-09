@@ -5,7 +5,6 @@ import './index.less';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import configStore, { rootSaga } from './store';
-console.log(rootSaga);
 const store = configStore();
 store.runSaga(rootSaga);
 

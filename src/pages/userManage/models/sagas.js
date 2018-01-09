@@ -6,9 +6,12 @@ import API from '../../../api';
 function* getTableData (params) {
     yield put(usSetTableLoading(true));
     const result = yield call(getData,API.userList, params);
-    const data = result.data.data || [];
     yield put(usSetTableLoading(false));
-    yield put(usSetTableData(data));
+    if (+result.code === 0) {
+        const data = result.data;
+        console.log(data)
+        yield put(usSetTableData(data));
+    }
 }
 function* watchGetTableData () {
     while(true) {

@@ -68,6 +68,9 @@ export default class Main extends Component {
                             <Menu.Item key="/usermanage">表格1</Menu.Item>
                             <Menu.Item key="/articles">表格2</Menu.Item>
                         </SubMenu>
+                        <SubMenu key="table" title={<span><Icon type="wallet" /><span>分类页</span></span>}>
+                            <Menu.Item key="/category">分类管理</Menu.Item>
+                        </SubMenu>
                         <Menu.Item key="3">
                             <Icon type="upload" />
                             <span>nav 3</span>

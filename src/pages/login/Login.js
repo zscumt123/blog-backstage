@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { lgSetLoginInfo,lgSetLoginOption } from './models/actions';
-import { getData } from '../../utils';
 import styles from './Login.less';
-import api from '../../api';
 import { hasLogin } from '../../utils';
 const FormItem = Form.Item;
 
@@ -14,9 +12,15 @@ class Login extends Component {
 
     componentWillMount() {
         const { dispatch, password } = this.props;
-        const username = Cookies.get('userName');
-        if (username) {
-            dispatch(lgSetLoginInfo({ username, password, isRember: true }));
+        const info = Cookies.get('accout');
+        if (info) {
+            try {
+                const res = JSON.parse(info);
+                const { name: username, isRember } = res;
+                console.log(username, isRember)
+                dispatch(lgSetLoginInfo({ username, password, isRember }));
+            } catch(e) {}
+            
         }
     }
     
@@ -25,37 +29,16 @@ class Login extends Component {
         e.preventDefault();
         validateFields((err,values) => {
             if(!err) {
-                const { userName: username, password } = values;
-                console.log(username, password)
-                dispatch(lgSetLoginOption({username, password}));
-                // this.setState({
-                //     loading: true
-                // });
-                // getData(api.userLogin, { username, password }, 'post').then(res => {
-                //     this.setState({
-                //         loading: false
-                //     });
-                //     if(+res.code === 0) {
-                //         // const { name } = res.data;
-                //         // const date = new Date(Date.now() + 30000);
-                //         // Cookies.set('userName', name, { expires: date });
-                //         // Cookies.set('userName', name);
-                //         const { history } = this.props;
-                //         history.push('/main');
-                //     }
-                    
-
-                // })
+                const { userName: username, password, remember } = values;
+                dispatch(lgSetLoginOption({username, password, isRember: remember}));
             }
-            
-
         });
         
     }
     render() {
-        // if(hasLogin()) {
-        //     return <Redirect to={'/main'} />
-        // }
+        if(hasLogin()) {
+            return <Redirect to={'/main'} />
+        }
         const { username, password, isRember, btnLoading, form: { getFieldDecorator } } = this.props;
         return (
             <div className={styles.container}>
