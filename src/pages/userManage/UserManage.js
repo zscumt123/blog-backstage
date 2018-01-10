@@ -44,6 +44,7 @@ const columns = [
     },
     {
         title: '操作',
+        key: '_id',
         render() {
             return <span>DEL</span>;
         }
@@ -106,13 +107,10 @@ class UserManage extends Component {
             params.sort = order === 'descend' ? -1 : 1;
             params.sortField = field;
         }
-        // this.getPageData(params);
-        dispatch(usGetTableData({ pageSize }));
+        dispatch(usGetTableData(params));
     }
     render() {
-        // const { dataSource, loading, pagination } = this.state;
         const { data, pageNum, total, loading } = this.props;
-        console.log(this.props)
         return (
             <div>
                 <Table 
