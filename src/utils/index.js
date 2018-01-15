@@ -3,6 +3,7 @@
  * 
 */
 import { Modal } from 'antd';
+import { handleActions } from 'redux-actions';
 import Cookies from 'js-cookie';
 import history from './history';
 
@@ -87,4 +88,24 @@ export async function getData(url, params = {}, method = 'GET') {
 
 export const hasLogin = () => {
     return !!Cookies.get('userName');
+}
+
+export function generateReducer(prefix, state) {
+    const SET_TABLE_LOADING = prefix + '_SET_TABLE_LOADING';
+    const SET_TABLE_DATA = prefix + '_SET_TABLE_DATA';
+    // const GET_TABLE_DATA = prefix + '_GET_TABLE_DATA';
+    
+    const initState = { ...state };
+    // const initState = {
+    //     data: {
+    //         data: [],
+    //         pageNum: 2,
+    //         total: 0
+    //     },
+    //     loading: false
+    // };
+    return handleActions({
+        [SET_TABLE_LOADING]: (state, action) => ({ ...state, option: action.payload.option }),
+        [SET_TABLE_DATA]: (state, action) => ({ ...state,  data: action.payload.data})
+    }, initState);
 }

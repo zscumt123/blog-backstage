@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table } from 'antd';
 import { usGetTableData } from './models/actions';
-
-import { getData } from '../../utils';
-import api from '../../api';
+import CommonTable from '../../components/commonTable/CommonTable';
 const columns = [
     {
         title: '用户名',
@@ -68,38 +65,13 @@ class UserManage extends Component {
             pageSize: 2,
             showQuickJumper: true,
         };
+        this.pageSize = 2;
     }
     componentDidMount() {
-    //     const { pageSize } = this.state.pagination;
-     
-    //    this.getPageData({ pageSize });
-       const { pageSize } = this.pagination;
        const { dispatch } = this.props;
-       dispatch(usGetTableData({ pageSize }));
+       dispatch(usGetTableData({ pageSize: this.pageSize }));
     }
-    getPageData = (obj) => {
-        this.setState({
-            loading: true,
-        });
-        getData(api.userList, obj).then((res) => {
-            if(Number(res.code === 0)) {
-                console.log(res);
-                const data = res.data ? res.data.data : {}
-                this.setState({
-                    dataSource: data,
-                    pagination: {
-                        ...this.state.pagination,
-                        current: res.data.pageNum || 1,
-                        total: res.data.total || 0,
-                    }
-                })
-            }
-            this.setState({
-                loading: false,
-            })
-            
-        });
-    }
+
     handleChange = ({ current, pageSize },filters, { field, order }) => {
         const { dispatch } = this.props;
         let params = { pageNum: current, pageSize };
@@ -109,18 +81,19 @@ class UserManage extends Component {
         }
         dispatch(usGetTableData(params));
     }
+
     render() {
         const { data, pageNum, total, loading } = this.props;
         return (
             <div>
-                <Table 
-                    onChange={this.handleChange} 
-                    pagination={{ ...this.pagination, current: pageNum, total }} 
-                    bordered 
+                <CommonTable 
                     loading={loading} 
-                    columns={columns} 
                     dataSource={data} 
-                    rowKey={'_id'}
+                    columns={columns} 
+                    pageSize={this.pageSize} 
+                    total={total}
+                    currentPage={pageNum}
+                    handleChange={this.handleChange}
                 />
             </div>
         );

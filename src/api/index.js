@@ -5,7 +5,8 @@
 
 const api = {
     userLogin: '/login',
-    userList: '/userlist'
+    userList: '/userlist',
+    category: '/category'
 }
 
 export default api;
