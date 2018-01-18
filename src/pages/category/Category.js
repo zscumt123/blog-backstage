@@ -13,17 +13,31 @@ const columns = [
         dataIndex: 'create_time',
         key: 'create_time'
     }
-]
+];
 
 class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.pageSize = 2;
     }
+    handleChange = () => {
+
+    };
     render() {
+        const { loading, data, pageNum, total } = this.props;
         return (
             <div>
-                <CommonTable/>
+                <CommonTable
+                    columns={columns}
+                    loading={loading}
+                    dataSource={data}
+                    currentPage={pageNum}
+                    total={total}
+                    handleChange={this.handleChange}
+                    pageSize={this.pageSize}
+                />
             </div>
         );
     }
@@ -31,5 +45,5 @@ class Category extends Component {
 const mapStateToProps = (state) => ({
     ...state.categoryData.data,
     loading: state.categoryData.loading
-})
+});
 export default connect(mapStateToProps)(Category)

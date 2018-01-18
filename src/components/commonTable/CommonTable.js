@@ -4,6 +4,16 @@ import PropTypes from 'prop-types';
 
 export default class CommonTable extends Component {
 
+    static propTypes  = {
+        loading: PropTypes.bool.isRequired,
+        dataSource: PropTypes.array.isRequired,
+        columns: PropTypes.array.isRequired,
+        pageSize: PropTypes.number.isRequired,
+        currentPage: PropTypes.number.isRequired,
+        total: PropTypes.number.isRequired,
+        handleChange: PropTypes.func,
+        
+    }
     constructor(props) {
         super(props);
         this.pagination = {

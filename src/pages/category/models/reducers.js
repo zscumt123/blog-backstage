@@ -1,13 +1,13 @@
 // import { handleActions } from 'redux-actions';
-import { generateReducer } from '../../../utils';
+import {generateReducer} from '../../../utils';
 // import { caSetTableLoading,  caSetTableData } from './actions';
 
 
 const initState = {
     data: {
         data: [],
-    pageNum: 2,
-    total: 0
+        pageNum: 2,
+        total: 0
     },
     loading: false
 };
