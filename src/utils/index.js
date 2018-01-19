@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import history from './history';
 
 const warning = Modal.warning;
+const success = Modal.success;
 const showWarnInfo = (msg) => {
     const modal = warning({
         title: '提示信息',
@@ -108,4 +109,11 @@ export function generateReducer(prefix, state) {
         [SET_TABLE_LOADING]: (state, action) => ({ ...state, option: action.payload.option }),
         [SET_TABLE_DATA]: (state, action) => ({ ...state,  data: action.payload.data})
     }, initState);
+}
+export function showSuccessModal(msg) {
+    const modal = success({
+        title: '提示信息',
+        content: msg
+    });
+    setTimeout(() => modal.destroy(), 1000);
 }

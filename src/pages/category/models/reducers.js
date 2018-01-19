@@ -1,17 +1,36 @@
-// import { handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
+import { combineReducers } from 'redux';
 import {generateReducer} from '../../../utils';
-// import { caSetTableLoading,  caSetTableData } from './actions';
+import { caSetBtnLoading,  caSetModalOption } from './actions';
 
 
 const initState = {
-    data: {
-        data: [],
-        pageNum: 2,
-        total: 0
-    },
+    // data: {
+    //     data: [],
+    //     pageNum: 2,
+    //     total: 0
+    // },
+    data: [],
     loading: false
 };
 
-const reducer = generateReducer('CA', initState);
+const tableReducer = generateReducer('CA', initState);
 
-export default reducer;
+const initModal = {
+    option: {
+        isAdd: true,
+        visible: false
+    },
+    btnLoading: false
+}
+
+const modalReducer = handleActions({
+    [caSetBtnLoading]: (state, action) => ({ ...state, btnLoading: action.payload.option }),
+    [caSetModalOption]: (state, action) => ({ ...state, option: action.payload.option })
+}, initModal);
+
+
+export default combineReducers({
+    tableData: tableReducer,
+    modalData: modalReducer
+});
