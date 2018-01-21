@@ -8,7 +8,9 @@ function* loginFn(params) {
     yield put(lgSetBtnLoading(true));
     const res = yield call(getData, API.userLogin, params, 'post');
     yield put(lgSetBtnLoading(false));
+    console.log(res);
     if(+res.code === 0) {
+        console.log('aaaaaaaa');
         history.push('/main');
     }
 }
