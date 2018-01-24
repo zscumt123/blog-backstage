@@ -6,6 +6,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from './Articles.less';
 
+import Bread from '../../components/bread/Bread';
+
 hljs.configure({
     languages: ['javascript', 'css', 'html']
 });
@@ -88,6 +90,7 @@ export default class Articles extends Component {
 
         return (
             <div style={styles.articleWrapper}>
+                <Bread/>
                 <div>文章列表</div>
                 <ReactQuill
                     ref={ref => this.editorRef = ref}

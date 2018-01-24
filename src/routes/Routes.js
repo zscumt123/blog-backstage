@@ -22,6 +22,14 @@ const Routes = (props) => (
 );
 export default Routes;
 
+
+const config = {
+    index: "首页",
+    usermanage: '用户管理',
+    articles: '文章管理',
+    category: '分类管理'
+}
+
 let MainRoutes = (props) => {
     const { match: { path } } = props;
     return (
@@ -34,4 +42,4 @@ let MainRoutes = (props) => {
     );
 }; 
 MainRoutes = withRouter(MainRoutes);
-export { MainRoutes };
+export { MainRoutes, config };
