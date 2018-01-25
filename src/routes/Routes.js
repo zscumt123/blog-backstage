@@ -33,12 +33,14 @@ const config = {
 let MainRoutes = (props) => {
     const { match: { path } } = props;
     return (
-        <div>
-            <Route path={`${path}/index`} component={Overview} />
-            <Route path={`${path}/usermanage`} component={UserManage} />
-            <Route path={`${path}/articles`} component={Articles} />
-            <Route path={`${path}/category`} component={Category} />
-        </div>
+        [
+            <Route key={'1'} path={`${path}/index`} component={Overview} />,
+            <Route key={'2'} path={`${path}/usermanage`} component={UserManage} />,
+            <Route key={'3'} path={`${path}/articles`} component={Articles} />,
+            <Route key={'4'} path={`${path}/category`} component={Category} />
+        ]
+
+
     );
 }; 
 MainRoutes = withRouter(MainRoutes);

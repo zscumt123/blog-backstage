@@ -8,7 +8,6 @@ const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
 
-
 export default class Main extends Component {
     constructor(props) {
         super(props);
@@ -89,7 +88,7 @@ export default class Main extends Component {
                         </Dropdown>
                         
                     </Header>
-                    <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+                    <Content className={styles.content}>
                         <MainRoutes/>
                     </Content>
                 </Layout>
