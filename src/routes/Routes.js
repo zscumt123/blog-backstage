@@ -36,7 +36,7 @@ let MainRoutes = (props) => {
         [
             <Route key={'1'} path={`${path}/index`} component={Overview} />,
             <Route key={'2'} path={`${path}/usermanage`} component={UserManage} />,
-            <Route key={'3'} path={`${path}/articles`} component={Articles} />,
+            <Route key={'3'} path={`${path}/articles/:id?`} component={Articles} />,
             <Route key={'4'} path={`${path}/category`} component={Category} />
         ]
 
