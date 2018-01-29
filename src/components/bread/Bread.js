@@ -30,7 +30,6 @@ class Bread extends Component {
     }
 
     itemRender =(route, params, routes, paths) => {
-        console.log(route,params, routes, paths);
         const index = routes.indexOf(route);
         const last = index === routes.length - 1;
         return last ? <span>{route.breadcrumbName}</span> : <Link to={`/${paths[index]}`}>{route.breadcrumbName}</Link>
@@ -39,10 +38,7 @@ class Bread extends Component {
     getRoutes = () => {
         const { location: { pathname } } = this.props;
         const paths = Object.keys(config);
-        // console.log(pathname);
-        // console.log(paths)
         const item = paths.find((item, index) => pathname.indexOf(item) !== -1);
-        console.log(item)
         return [
             {
                 path: 'main/index',

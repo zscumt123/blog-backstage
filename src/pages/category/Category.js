@@ -25,8 +25,13 @@ class Category extends Component {
             },
             {
                 title: '创建时间',
-                dataIndex: 'create_time',
-                key: 'create_time'
+                dataIndex: 'create_date',
+                key: 'create_date'
+            },
+            {
+                title: '文章数量',
+                dataIndex: 'article_count',
+                key: 'article_count',
             },
             {
                 title: '操作',

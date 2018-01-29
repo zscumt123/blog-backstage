@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import pathToRegexp from 'path-to-regexp';
+import { connect } from 'react-redux';
 import { Button, Steps,Form, Select, Input } from 'antd';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import Editor from '../../components/editor/Editor';
 import styles from './Articles.less';
+import { arGetCategoryData, arSetFormParams } from './models/actions';
 
 const Step = Steps.Step;
 const FormItem = Form.Item;
@@ -18,7 +20,7 @@ class Articles extends Component {
     }
 
     renderContent = () => {
-        const { match: { params: { id } }, form: { getFieldDecorator } } = this.props;
+        const { match: { params: { id } }, form: { getFieldDecorator }, formData: { categoryData, category, title } } = this.props;
         if(!id) {
             return null;
         }
@@ -29,7 +31,7 @@ class Articles extends Component {
                         <FormItem label={"文章标题"} labelCol={{span: 5}} wrapperCol={{span:19}}>
                             {
                                 getFieldDecorator('title', {
-                                    initialValue: ''
+                                    initialValue: title
                                 })(
                                     <Input placeholder={"请输入文章标题"} />
                                 )
@@ -38,12 +40,12 @@ class Articles extends Component {
                         <FormItem label={"文章分类"} labelCol={{span: 5}} wrapperCol={{span:19}}>
                             {
                                 getFieldDecorator('category', {
-                                    initialValue: '1'
+                                    initialValue: category
                                 })(
                                     <Select>
-                                        <Option value={"1"}>aaa</Option>
-                                        <Option value={"2"}>bbb</Option>
-                                        <Option value={"3"}>ccc</Option>
+                                        {
+                                            categoryData.map((item, index) => <Option key={item._id} value={item._id}>{item.category_name}</Option>)
+                                        }
                                     </Select>
                                 )
                             }
@@ -55,7 +57,10 @@ class Articles extends Component {
                 );
             case 'content':
                 return (
-                    <div>content</div>
+                    <div>
+                        <Editor onChange={this.editorChange}/>
+                        <Button type={'primary'} onClick={this.toPrevStep}>上一步</Button>
+                    </div>
                 );
             case 'finish':
                 return (
@@ -66,11 +71,19 @@ class Articles extends Component {
         }
 
     }
+    toPrevStep = () => {
+        const { history: { go } } = this.props;
+        go(-1);
+    }
     toNextStep = () => {
-        const { history: { push }, match: { path }}  = this.props;
-        let nextPath = path.replace(/:\w*\?$/, '')
+        const { history: { push }, match: { path }, form: { getFieldsValue }, dispatch}  = this.props;
+        dispatch(arSetFormParams(getFieldsValue()));
+        let nextPath = path.replace(/:\w*\?$/, '');
         push(`${nextPath}content`);
 
+    }
+    editorChange = (val) => {
+        console.log(val);
     }
 
 
@@ -83,10 +96,19 @@ class Articles extends Component {
     }
 
     componentDidMount() {
-
+        const { dispatch, formData } = this.props;
+        console.log(formData);
+        dispatch(arGetCategoryData({}));
     }
-    componentDidUpdate() {
-
+    componentDidUpdate(prevProps, prevState) {
+        const { formData: { category: prevCategory, title: prevTitle } } = prevProps;
+        const { formData: { category, title },form: { setFieldsValue } } = this.props;
+        if (category !== prevCategory || title !== prevTitle) {
+            setFieldsValue({
+                title,
+                category,
+            })
+        }
     }
     render() {
         const { location: { pathname }, match, form: { getFieldDecorator } } = this.props;
@@ -108,4 +130,7 @@ class Articles extends Component {
         );
     }
 }
-export default Form.create()(Articles);
+const mapStateToProps = (state) => ({
+    formData: state.articleData.formData,
+});
+export default connect(mapStateToProps)(Form.create()(Articles));
