@@ -69,7 +69,7 @@ export default class Main extends Component {
                             <Menu.Item key="/category">分类管理</Menu.Item>
                         </SubMenu>
                         <SubMenu key="article" title={<span><Icon type="book" /><span>文章页</span></span>}>
-                            <Menu.Item key="/articles">新增文章</Menu.Item>
+                            <Menu.Item key="/articles/add">新增文章</Menu.Item>
                         </SubMenu>
                     </Menu>
                 </Sider>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/monokai-sublime.css';
 import ReactQuill from 'react-quill';
@@ -47,24 +47,24 @@ const config = {
 
 export default class Articles extends Component {
 
-    static propTypes = {
-        defaultValue: PropTypes.string,
-        onChange: PropTypes.func,
-    }
+    // static propTypes = {
+    //     defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    //     onChange: PropTypes.func,
+    // }
+    //
+    // static defaultProps = {
+    //     defaultValue: '',
+    //     onChange: () => {},
+    // }
 
-    static defaultProps = {
-        defaultValue: '',
-        onChange: () => {},
-    }
-
-    constructor(props){
-        super(props);
-        this.state = {
-            text: '',
-        };
-        this.editor  = null;
-        this.editorRef = null;
-    }
+    // constructor(props){
+    //     super(props);
+    //     this.state = {
+    //         text: '',
+    //     };
+    //     this.editor  = null;
+    //     this.editorRef = null;
+    // }
 
     // handleClick = () => {
     //     console.log(this.editor)
@@ -72,40 +72,37 @@ export default class Articles extends Component {
     //     console.log(val);
     // }
 
-    handleChange = (value, delta, source, editor) => {
-        // console.log(value)
-        this.setState({
-            text: value,
-        });
-        const val = editor.getContents();
-        const { onChange } = this.props;
-        onChange(val);
-    }
+    // handleChange = (value, delta, source, editor) => {
+    //     // console.log(value)
+    //     this.setState({
+    //         text: value,
+    //     });
+    //     const val = editor.getContents();
+    //     const { onChange } = this.props;
+    //     onChange(value);
+    // }
 
-    attachRef = () => {
-        if(typeof this.editorRef.getEditor === 'function') {
-            this.editor = this.editorRef.getEditor();
-        }
-    }
-    componentDidMount() {
-        this.attachRef();
-    }
-    componentDidUpdate() {
-        this.attachRef();
-    }
+    // attachRef = () => {
+    //     if(typeof this.editorRef.getEditor === 'function') {
+    //         this.editor = this.editorRef.getEditor();
+    //     }
+    // }
+    // componentDidMount() {
+    //     this.attachRef();
+    // }
+    // componentDidUpdate() {
+    //     this.attachRef();
+    // }
     render() {
-        const { text } = this.state;
-        const { defaultValue } = this.props;
+        // const { text } = this.state;
+        // const { defaultValue } = this.props;
         return (
             <ReactQuill
-                ref={ref => this.editorRef = ref}
                 placeholder={"请输入文章"}
                 theme={"snow"}
-                defaultValue={defaultValue}
-                value={text}
                 modules={config.modules}
                 formats={config.formats}
-                onChange={this.handleChange}
+                {...this.props}
             />
         );
     }

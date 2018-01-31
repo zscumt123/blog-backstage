@@ -1,6 +1,6 @@
 import { put, call, take,all, fork, select } from 'redux-saga/effects';
 import { getData } from '../../../utils';
-import { AR_GET_CATEGORY_DATA, arSetCategoryData, arSetFormParams } from './actions';
+import { AR_GET_CATEGORY_DATA, arSetCategoryData, arSetFormParams, arSetBtnLoading, AR_ADD_ARTICLE_DATA } from './actions';
 import API from '../../../api'
 
 const titleSelector = state => state.articleData.formData.title;
@@ -26,8 +26,24 @@ function* watchGetCategory() {
     }
 }
 
+function* addArticle(params) {
+    yield put(arSetBtnLoading(true));
+    const res = yield call(getData, API.article, params, 'post');
+    yield put(arSetBtnLoading(false));
+    if (Number(res.code) === 0) {
+        console.log(res);
+    }
+}
+function* watchAddArticle() {
+    while (true) {
+        const action = yield take(AR_ADD_ARTICLE_DATA);
+        yield call(addArticle, action.payload.params);
+    }
+}
+
 export default function* root() {
     yield all([
-        fork(watchGetCategory)
+        fork(watchGetCategory),
+        fork(watchAddArticle)
     ])
 }

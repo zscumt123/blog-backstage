@@ -4,7 +4,14 @@ import { Button, Steps,Form, Select, Input } from 'antd';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import Editor from '../../components/editor/Editor';
 import styles from './Articles.less';
-import { arGetCategoryData, arSetFormParams } from './models/actions';
+import {
+    arGetCategoryData,
+    arSetFormParams,
+    arSetArticleData,
+    arAddArticleData,
+    arSetBtnLoading,
+    arSetArticleCurrent
+} from './models/actions';
 
 const Step = Steps.Step;
 const FormItem = Form.Item;
@@ -15,12 +22,18 @@ class Articles extends Component {
         super(props);
         this.state = {
             text: '',
+            editValue: ''
         };
         this.editor  = null;
     }
 
     renderContent = () => {
-        const { match: { params: { id } }, form: { getFieldDecorator }, formData: { categoryData, category, title } } = this.props;
+        const {
+            match: { params: { id } },
+            form: { getFieldDecorator },
+            categoryData, category, title, data
+        } = this.props;
+
         if(!id) {
             return null;
         }
@@ -56,10 +69,17 @@ class Articles extends Component {
                     </Form>
                 );
             case 'content':
+                const { editValue } = this.state;
                 return (
                     <div>
-                        <Editor onChange={this.editorChange}/>
-                        <Button type={'primary'} onClick={this.toPrevStep}>上一步</Button>
+                        <Editor
+                            defaultValue={data}
+                            value={editValue}
+                            onChange={this.editorChange}/>
+                        <div>
+                            <Button type={'primary'} onClick={this.toPrevStep}>上一步</Button>
+                            <Button type={'primary'} onClick={this.handleSubmit}>提交</Button>
+                        </div>
                     </div>
                 );
             case 'finish':
@@ -72,37 +92,49 @@ class Articles extends Component {
 
     }
     toPrevStep = () => {
-        const { history: { go } } = this.props;
+        const { history: { go }, dispatch } = this.props;
         go(-1);
+        dispatch(arSetArticleCurrent(0));
     }
     toNextStep = () => {
         const { history: { push }, match: { path }, form: { getFieldsValue }, dispatch}  = this.props;
         dispatch(arSetFormParams(getFieldsValue()));
         let nextPath = path.replace(/:\w*\?$/, '');
         push(`${nextPath}content`);
+        dispatch(arSetArticleCurrent(1));
 
     }
     editorChange = (val) => {
-        console.log(val);
+        // console.log(val);
+        // const { dispatch } = this.props;
+        // dispatch(arSetArticleData(val));
+        this.setState({
+            editValue: val,
+        })
+    }
+    handleSubmit = () => {
+        const {  category, title, dispatch } = this.props;
+        const { editValue } = this.state;
+        dispatch(arAddArticleData({ categoryId: category, title, article: editValue }));
     }
 
-
     componentWillMount() {
-        const { location: { pathname }, match: { params }, history: { push } } = this.props;
+        const { location: { pathname }, match: { params }, history: { push }, dispatch } = this.props;
         if(!params.id) {
             push(`${pathname}/add`);
         }
+        dispatch(arSetFormParams({title: '', category: ''}));
+        dispatch(arSetArticleCurrent(0));
 
     }
 
     componentDidMount() {
-        const { dispatch, formData } = this.props;
-        console.log(formData);
+        const { dispatch } = this.props;
         dispatch(arGetCategoryData({}));
     }
     componentDidUpdate(prevProps, prevState) {
-        const { formData: { category: prevCategory, title: prevTitle } } = prevProps;
-        const { formData: { category, title },form: { setFieldsValue } } = this.props;
+        const { category: prevCategory, title: prevTitle  } = prevProps;
+        const { category, title, form: { setFieldsValue } } = this.props;
         if (category !== prevCategory || title !== prevTitle) {
             setFieldsValue({
                 title,
@@ -111,12 +143,12 @@ class Articles extends Component {
         }
     }
     render() {
-        const { location: { pathname }, match, form: { getFieldDecorator } } = this.props;
+        const { current } = this.props;
 
         return (
                 <PageLayout>
                     <div  className={styles.step}>
-                        <Steps current={0}>
+                        <Steps current={current}>
                             <Step title={"输入分类内容"}/>
                             <Step title={"输入文章内容"}/>
                             <Step title={"完成"}/>
@@ -131,6 +163,7 @@ class Articles extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    formData: state.articleData.formData,
+    ...state.articleData.formData,
+    // articleData: state.articleData.article.data,
 });
 export default connect(mapStateToProps)(Form.create()(Articles));
