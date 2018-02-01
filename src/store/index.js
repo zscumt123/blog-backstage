@@ -6,19 +6,22 @@ import { userManageData, userManageSaga } from '../pages/userManage';
 import { loginData, loginSaga } from '../pages/login';
 import { categoryData, categorySaga } from '../pages/category';
 import { articleSaga, articleData } from '../pages/articles';
+import { articleListSaga, articleListData } from '../pages/articleList';
 
 const rootReducer = combineReducers({
     userManageData,
     loginData,
     categoryData,
-    articleData
+    articleData,
+    articleListData
 });
 const rootSaga = function* () {
     yield all([
         fork(userManageSaga),
         fork(loginSaga),
         fork(categorySaga),
-        fork(articleSaga)
+        fork(articleSaga),
+        fork(articleListSaga)
     ])
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

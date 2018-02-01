@@ -10,6 +10,7 @@ import Overview from '../pages/overview/Overview';
 import UserManage from '../pages/userManage/UserManage';
 import Articles from '../pages/articles/Articles';
 import Category from '../pages/category';
+import ArticleList from '../pages/articleList';
 
 const Routes = (props) => (
     <Router history={history}>
@@ -37,7 +38,8 @@ let MainRoutes = (props) => {
             <Route key={'1'} path={`${path}/index`} component={Overview} />,
             <Route key={'2'} path={`${path}/usermanage`} component={UserManage} />,
             <Route key={'3'} path={`${path}/articles/:id?`} component={Articles} />,
-            <Route key={'4'} path={`${path}/category`} component={Category} />
+            <Route key={'4'} path={`${path}/category`} component={Category} />,
+            <Route key={'5'} path={`${path}/articlelist`} component={ArticleList} />
         ]
 
 
