@@ -27,8 +27,9 @@ export default Routes;
 const config = {
     index: "首页",
     usermanage: '用户管理',
-    articles: '文章管理',
-    category: '分类管理'
+    articles: '新建文章',
+    category: '分类管理',
+    articlelist: '文章列表'
 }
 
 let MainRoutes = (props) => {

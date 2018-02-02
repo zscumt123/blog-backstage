@@ -106,7 +106,7 @@ export function generateReducer(prefix, state) {
     //     loading: false
     // };
     return handleActions({
-        [SET_TABLE_LOADING]: (state, action) => ({ ...state, option: action.payload.option }),
+        [SET_TABLE_LOADING]: (state, action) => ({ ...state, loading: action.payload.option }),
         [SET_TABLE_DATA]: (state, action) => ({ ...state,  data: action.payload.data})
     }, initState);
 }

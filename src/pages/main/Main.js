@@ -74,7 +74,7 @@ export default class Main extends Component {
                         </SubMenu>
                     </Menu>
                 </Sider>
-                <Layout>
+                <Layout className={styles.rightContainer}>
                     <Header style={{ background: '#fff', padding: 0 }}>
                         <Icon
                             className={styles.trigger}
