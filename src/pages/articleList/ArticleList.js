@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Icon, Form, Select, DatePicker, Button, Row, Col } from 'antd';
+import { Icon, Form, Select, DatePicker, Button, Row, Col, Popconfirm } from 'antd';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import CommonTable from '../../components/commonTable/CommonTable';
-import { alGetTableData, alGetCategoryData } from './models/actions';
+import { alGetTableData, alGetCategoryData, alDelTableData } from './models/actions';
 import styles from './ArticleList.less';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -28,29 +29,53 @@ class ArticleList extends Component {
                     return(
                         <div className={styles.operate}>
                             <span onClick={() => _this.handleEdit(record)}><Icon style={{ fontSize:16 }} type="edit" /></span>
-                            <span onClick={() => _this.handleDel(record)}><Icon style={{ fontSize:16 }} type="delete"/></span>
+                            <Popconfirm title={"确定要删除吗?"} onConfirm={() => _this.handleDel(record)}>
+                                <span><Icon style={{ fontSize:16 }} type="delete"/></span>
+                            </Popconfirm>
                         </div>
                     );
                 }
             }
         ];
-        this.pageSize = 10;
+        this.pageSize = 2;
     }
 
     handleEdit = () => {
 
     }
-    handleDel = () => {
-
+    handleDel = (record) => {
+        console.log(record);
+        const { dispatch } = this.props;
+        const params = this.collectParams();
+        dispatch(alDelTableData({ id: record._id, params }));
     }
+    collectParams = () => {
+        const { form: { getFieldsValue } } = this.props;
+        const { category, createTime } = getFieldsValue();
+        const isIn = Array.isArray(createTime) && createTime.length > 0;
+        return {
+            categoryId: category,
+            startTime: isIn ? moment(createTime[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+            endTime: isIn ? moment(createTime[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+            pageSize: this.pageSize
+            // pageSize: this.pageSize,
+            // pageNum,
+        };
+    }
+
     handleChange = (args) => {
         const { dispatch } = this.props;
         const { pageSize, current: pageNum } = args;
-        dispatch(alGetTableData({ pageSize, pageNum }));
+        const params = this.collectParams();
+        dispatch(alGetTableData({ ...params, pageSize, pageNum }));
     }
 
-    handleSearch = () => {
-        console.log(1223)
+    handleSearch = (e) => {
+        e.preventDefault();
+        const { dispatch } = this.props;
+        const params = this.collectParams();
+        dispatch(alGetTableData(params));
+
     }
     renderOption = () => {
         const { categoryData } = this.props;
@@ -87,7 +112,7 @@ class ArticleList extends Component {
                         </Col>
                         <Col span={4} className={styles.btnWarpper}>
                             <FormItem>
-                                <Button type={'primary'}>搜索</Button>
+                                <Button type={'primary'} htmlType={'submit'}>搜索</Button>
                             </FormItem>
                         </Col>
                     </Row>
@@ -98,7 +123,7 @@ class ArticleList extends Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(alGetTableData({}));
+        dispatch(alGetTableData({ pageSize: this.pageSize }));
         dispatch(alGetCategoryData());
     }
 

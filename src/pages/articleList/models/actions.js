@@ -6,6 +6,7 @@ export const AL_SET_TABLE_DATA = 'AL_SET_TABLE_DATA';
 export const AL_GET_TABLE_DATA = 'AL_GET_TABLE_DATA';
 export const AL_GET_CATEGORY_DATA = 'AL_GET_CATEGORY_DATA';
 export const AL_SET_CATEGORY_DATA = 'AL_SET_CATEGORY_DATA';
+export const AL_DEL_TABLE_DATA = 'AL_DEL_TABLE_DATA';
 
 const {
     alSetTableLoading,
@@ -13,12 +14,14 @@ const {
     alGetTableData,
     alGetCategoryData,
     alSetCategoryData,
+    alDelTableData
 } = createActions({
     [AL_SET_TABLE_LOADING]: option => ({ option }),
     [AL_SET_TABLE_DATA]: data => ({ data }),
     [AL_GET_TABLE_DATA]: params => ({ params }),
     [AL_GET_CATEGORY_DATA]: () => ({}),
-    [AL_SET_CATEGORY_DATA]: data => ({ data })
+    [AL_SET_CATEGORY_DATA]: data => ({ data }),
+    [AL_DEL_TABLE_DATA]: data => ({ data })
 });
 
 export {
@@ -26,5 +29,6 @@ export {
     alSetTableLoading,
     alGetTableData,
     alSetCategoryData,
-    alGetCategoryData
+    alGetCategoryData,
+    alDelTableData
 }

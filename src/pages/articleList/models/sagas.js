@@ -1,5 +1,13 @@
 import {put, call, fork, all, take} from 'redux-saga/effects';
-import {alSetTableLoading, alSetTableData, AL_GET_TABLE_DATA, AL_GET_CATEGORY_DATA, alSetCategoryData} from './actions';
+import { showSuccessModal } from '../../../utils';
+import {
+    alSetTableLoading,
+    alSetTableData,
+    AL_GET_TABLE_DATA,
+    AL_GET_CATEGORY_DATA,
+    alSetCategoryData,
+    AL_DEL_TABLE_DATA
+} from './actions';
 import API from '../../../api';
 import {getData} from '../../../utils';
 
@@ -17,6 +25,22 @@ function* watchGetTableData() {
     while (true) {
         const action = yield take(AL_GET_TABLE_DATA);
         yield call(getTableData, action.payload.params);
+    }
+}
+
+function* delTableData(data) {
+    const { id = '', params = {} } = data;
+    const res = yield call(getData, API.article, { id }, 'delete');
+    if (Number(res.code) === 0) {
+        showSuccessModal('删除成功');
+        yield call(getTableData, params);
+    }
+}
+
+function* watchDelTableData() {
+    while (true) {
+        const action = yield take(AL_DEL_TABLE_DATA);
+        yield call(delTableData, action.payload.data);
     }
 }
 
@@ -38,6 +62,7 @@ function* watchGetCategoryData() {
 export default function* root() {
     yield all([
         fork(watchGetTableData),
-        fork(watchGetCategoryData)
+        fork(watchGetCategoryData),
+        fork(watchDelTableData)
     ]);
 }

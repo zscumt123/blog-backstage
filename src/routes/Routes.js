@@ -36,6 +36,7 @@ let MainRoutes = (props) => {
     const { match: { path } } = props;
     return (
         [
+            <Route key={'0'} path={`${path}`} exact render={() => <Redirect to={`${path}/index`} />} />,
             <Route key={'1'} path={`${path}/index`} component={Overview} />,
             <Route key={'2'} path={`${path}/usermanage`} component={UserManage} />,
             <Route key={'3'} path={`${path}/articles/:id?`} component={Articles} />,

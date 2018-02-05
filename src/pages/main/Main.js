@@ -7,6 +7,16 @@ import styles from './Main.less';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
+// const allSelectKeys = ['/index', '/usermanage', '/category', '/articles/add', '/articlelist'];
+// const allOpenKeys = ['/index', 'admin', 'category', 'article'];
+
+const menuConfig = {
+    '/index': ['/index'],
+    'admin': ['/usermanage'],
+    'category': ['/category'],
+    'article': ['/articles/add', '/articlelist']
+};
+
 
 export default class Main extends Component {
     constructor(props) {
@@ -14,6 +24,8 @@ export default class Main extends Component {
         const _this = this;
         this.state = {
             collapsed: false,
+            openKeys: [],
+            selectedKeys: []
         };
         this.menu = (
             <Menu>
@@ -37,12 +49,32 @@ export default class Main extends Component {
           collapsed: !this.state.collapsed,
         });
     }
-    handleSelect = ({ key, selectedKeys, item }) => {
+    handleSelect = ({ key }) => {
+        this.setState({
+            selectedKeys: [key]
+        });
         const { history } = this.props;
         const url = `/main${key}`;
         history.push(url);
     }
+    handleOpenChange = (openKeys) =>{
+        // const { openKeys } = this.state;
+        const latestOpenKeyIndex = openKeys.findIndex(key => this.state.openKeys.indexOf(key) === -1);
+        if(latestOpenKeyIndex !== -1) {
+            this.setState({
+                openKeys: this.state.openKeys.concat(openKeys[latestOpenKeyIndex])
+            });
+        } else {
+            let copyOpenKeys = [...this.state.openKeys];
+            copyOpenKeys.splice(latestOpenKeyIndex, 1);
+            this.setState({
+                openKeys: copyOpenKeys
+            })
+
+        }
+    }
     render() {
+        const { selectedKeys, openKeys } = this.state;
         return (
             <Layout>
                 <Sider
@@ -57,7 +89,7 @@ export default class Main extends Component {
                             <span>Manage System</span>
                         </a>
                     </div>
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['/main']} onSelect={this.handleSelect}>
+                    <Menu theme="dark" mode="inline" selectedKeys={selectedKeys} openKeys={openKeys} onOpenChange={this.handleOpenChange}  onSelect={this.handleSelect}>
                         <Menu.Item key="/index">
                             <Icon type="home" />
                             <span>首页</span>
@@ -96,4 +128,19 @@ export default class Main extends Component {
             </Layout>
         );
     }
+    componentWillMount(){
+        const { location: { pathname } } = this.props;
+        for (let key in menuConfig) {
+            let item = menuConfig[key];
+            const selectKey = item.find(val => pathname.indexOf(val) !== -1);
+            if(selectKey) {
+                console.log(item, selectKey)
+                this.setState({
+                    openKeys: [key],
+                    selectedKeys: [selectKey]
+                })
+            }
+        }
+    }
+
 }
