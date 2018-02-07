@@ -1,8 +1,15 @@
 import { put, call, take,all, fork, select } from 'redux-saga/effects';
 import { getData } from '../../../utils';
-import { AR_GET_CATEGORY_DATA, arSetCategoryData, arSetFormParams, arSetBtnLoading, AR_ADD_ARTICLE_DATA } from './actions';
+import {
+    AR_GET_CATEGORY_DATA,
+    arSetCategoryData,
+    arSetFormParams,
+    arSetBtnLoading,
+    AR_ADD_ARTICLE_DATA,
+    arSetArticleCurrent
+} from './actions';
 import API from '../../../api'
-
+import history from '../../../utils/history';
 const titleSelector = state => state.articleData.formData.title;
 
 function* getCategory(params) {
@@ -31,6 +38,8 @@ function* addArticle(params) {
     const res = yield call(getData, API.article, params, 'post');
     yield put(arSetBtnLoading(false));
     if (Number(res.code) === 0) {
+        history.push('/main/articles/finish');
+        yield put(arSetArticleCurrent(2));
         console.log(res);
     }
 }

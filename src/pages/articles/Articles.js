@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Steps,Form, Select, Input } from 'antd';
+import { Button, Steps,Form, Select, Input, Icon } from 'antd';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import Editor from '../../components/editor/Editor';
 import styles from './Articles.less';
@@ -31,7 +31,7 @@ class Articles extends Component {
         const {
             match: { params: { id } },
             form: { getFieldDecorator },
-            categoryData, category, title, data
+            categoryData, category, title, data,btnLoading
         } = this.props;
 
         if(!id) {
@@ -44,7 +44,8 @@ class Articles extends Component {
                         <FormItem label={"文章标题"} labelCol={{span: 5}} wrapperCol={{span:19}}>
                             {
                                 getFieldDecorator('title', {
-                                    initialValue: title
+                                    initialValue: title,
+                                    rules: [{ required: true, message: '标题不能为空' }]
                                 })(
                                     <Input placeholder={"请输入文章标题"} />
                                 )
@@ -76,15 +77,21 @@ class Articles extends Component {
                             defaultValue={data}
                             value={editValue}
                             onChange={this.editorChange}/>
-                        <div>
+                        <div className={styles.submitBtn}>
                             <Button type={'primary'} onClick={this.toPrevStep}>上一步</Button>
-                            <Button type={'primary'} onClick={this.handleSubmit}>提交</Button>
+                            <Button type={'primary'} loading={btnLoading} onClick={this.handleSubmit}>提交</Button>
                         </div>
                     </div>
                 );
             case 'finish':
                 return (
-                    <div>finish</div>
+                    <div className={styles.finishContainer}>
+                        <div><Icon style={{color: '#52c41a', fontSize: '20px'}} type={'check-circle'}/></div>
+                        <div>操作成功</div>
+                        <div>
+                            <Button type={'primary'} onClick={this.lookArticle}>查看文章</Button>
+                        </div>
+                    </div>
                 );
             default:
                 return null;
@@ -97,12 +104,22 @@ class Articles extends Component {
         dispatch(arSetArticleCurrent(0));
     }
     toNextStep = () => {
-        const { history: { push }, match: { path }, form: { getFieldsValue }, dispatch}  = this.props;
-        dispatch(arSetFormParams(getFieldsValue()));
-        let nextPath = path.replace(/:\w*\?$/, '');
-        push(`${nextPath}content`);
-        dispatch(arSetArticleCurrent(1));
+        const { history: { push }, match: { path }, form: { getFieldsValue, validateFields }, dispatch}  = this.props;
+        validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            dispatch(arSetFormParams(getFieldsValue()));
+            let nextPath = path.replace(/:\w*\?$/, '');
+            push(`${nextPath}content`);
+            dispatch(arSetArticleCurrent(1));
+        })
 
+
+    }
+    lookArticle = () => {
+        const { history: { push } } = this.props;
+        push('/main/articlelist');
     }
     editorChange = (val) => {
         // console.log(val);

@@ -25,6 +25,7 @@ class ArticleList extends Component {
                 title: '操作',
                 dataIndex: '_id',
                 key: '_id',
+                width: '150px',
                 render(text, record){
                     return(
                         <div className={styles.operate}>

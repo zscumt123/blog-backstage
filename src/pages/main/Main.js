@@ -73,6 +73,7 @@ export default class Main extends Component {
 
         }
     }
+
     render() {
         const { selectedKeys, openKeys } = this.state;
         return (
@@ -130,6 +131,7 @@ export default class Main extends Component {
     }
     componentWillMount(){
         const { location: { pathname } } = this.props;
+        console.log(pathname);
         for (let key in menuConfig) {
             let item = menuConfig[key];
             const selectKey = item.find(val => pathname.indexOf(val) !== -1);
