@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import CommonTable from '../../components/commonTable/CommonTable';
 import CategoryModal from './categoryModal/CategoryModal';
-
+import PageLayout from '../../components/pageLayout/PageLayout';
 import { caGetTableData, caSetModalOption, caDelTableData } from './models/actions';
 import styles from './Category.less';
 
@@ -87,29 +87,32 @@ class Category extends Component {
         const { loading, data, } = this.props;
         const { field } = this.state;
         return (
-            <div className={styles.categoryWrapper}>
-                <div className={styles.btnWrapper}>
-                    <Button
-                        className={styles.addBtn}
-                        onClick={this.addCategory}
-                        loading={false}
-                        icon={'plus-circle-o'}
-                        type={'primary'}
-                    >
-                        新建
-                    </Button>
+            <PageLayout>
+                <div className={styles.categoryWrapper}>
+                    <div className={styles.btnWrapper}>
+                        <Button
+                            className={styles.addBtn}
+                            onClick={this.addCategory}
+                            loading={false}
+                            icon={'plus-circle-o'}
+                            type={'primary'}
+                        >
+                            新建
+                        </Button>
+                    </div>
+                    <CommonTable
+                        columns={this.columns}
+                        loading={loading}
+                        dataSource={data}
+                        currentPage={1}
+                        total={0}
+                        handleChange={this.handleChange}
+                        pageSize={this.pageSize}
+                    />
+                    <CategoryModal field={field}/>
                 </div>
-                <CommonTable
-                    columns={this.columns}
-                    loading={loading}
-                    dataSource={data}
-                    currentPage={1}
-                    total={0}
-                    handleChange={this.handleChange}
-                    pageSize={this.pageSize}
-                />
-                <CategoryModal field={field}/>
-            </div>
+            </PageLayout>
+
         );
     }
 }

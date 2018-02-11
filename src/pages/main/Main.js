@@ -95,8 +95,8 @@ export default class Main extends Component {
                             <Icon type="home" />
                             <span>首页</span>
                         </Menu.Item>
-                        <SubMenu key="admin" title={<span><Icon type="user" /><span>列表页</span></span>}>
-                            <Menu.Item key="/usermanage">表格1</Menu.Item>
+                        <SubMenu key="admin" title={<span><Icon type="user" /><span>用户页</span></span>}>
+                            <Menu.Item key="/usermanage">用户管理</Menu.Item>
                         </SubMenu>
                         <SubMenu key="category" title={<span><Icon type="wallet" /><span>分类页</span></span>}>
                             <Menu.Item key="/category">分类管理</Menu.Item>

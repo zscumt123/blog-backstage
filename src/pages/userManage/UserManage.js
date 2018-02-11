@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
+import PageLayout from '../../components/pageLayout/PageLayout';
+
 import { usGetTableData } from './models/actions';
 import CommonTable from '../../components/commonTable/CommonTable';
 const columns = [
@@ -85,17 +88,19 @@ class UserManage extends Component {
     render() {
         const { data, pageNum, total, loading } = this.props;
         return (
-            <div>
-                <CommonTable 
-                    loading={loading} 
-                    dataSource={data} 
-                    columns={columns} 
-                    pageSize={this.pageSize} 
-                    total={total}
-                    currentPage={pageNum}
-                    handleChange={this.handleChange}
-                />
-            </div>
+            <PageLayout>
+                <div>
+                    <CommonTable
+                        loading={loading}
+                        dataSource={data}
+                        columns={columns}
+                        pageSize={this.pageSize}
+                        total={total}
+                        currentPage={pageNum}
+                        handleChange={this.handleChange}
+                    />
+                </div>
+            </PageLayout>
         );
     }
 }
